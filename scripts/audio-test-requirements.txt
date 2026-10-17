@@ -1,0 +1,4 @@
+pycaw==20260927
+comtypes==1.4.17
+httpx==0.28.1
+websockets==15.0.1

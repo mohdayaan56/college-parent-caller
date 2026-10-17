@@ -1,0 +1,5 @@
+FROM college-parent-portable-pbx
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    asterisk-mobile bluez dbus usbutils kmod iproute2 python3 \
+    && rm -rf /var/lib/apt/lists/*
+# Pairing and mobile.conf are provided by the local phone setup, not this image.

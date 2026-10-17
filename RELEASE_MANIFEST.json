@@ -1,0 +1,250 @@
+{
+  ".dockerignore": {
+    "bytes": 55,
+    "sha256": "c8ed306e5a710e45701045a7be04b9cbef34fba36ff69ecdffe74bdc6e00963a"
+  },
+  ".env.example": {
+    "bytes": 4053,
+    "sha256": "dd1255d38186c871ee5ba8327b739eb09efe858e6c68d85de5b2682dbbb692e3"
+  },
+  ".gitignore": {
+    "bytes": 577,
+    "sha256": "78dc1c87908ad45ced828fd1d8af98e89d4dc3c73985a32970043dd4d6be0fff"
+  },
+  "app/__init__.py": {
+    "bytes": 37,
+    "sha256": "29c1e4c10944ea388e961a87afdce99ec2bc53b78b6ad0f561706b77f2eb2536"
+  },
+  "app/agi_main.py": {
+    "bytes": 207,
+    "sha256": "d1ece501dfd29aab4753c871299de1d71bd88f24b4800c0bdbf9b90bca132688"
+  },
+  "app/agi_server.py": {
+    "bytes": 4135,
+    "sha256": "68a1b2754416ab724cca277c20ac4fe9bdab1d02076e3bae1843c3dad214c854"
+  },
+  "app/ari.py": {
+    "bytes": 25663,
+    "sha256": "f54a03ae43d8f97106f82bab77022be3016a7fb70c17ffa22aea6c188b23d190"
+  },
+  "app/audio_cache.py": {
+    "bytes": 11190,
+    "sha256": "0abb305366f17887643ec8549e50de9cb956b0276301696007bc0739a86f5aaf"
+  },
+  "app/campaign.py": {
+    "bytes": 17785,
+    "sha256": "fd013dd46ef569a41749965efec9edfe4bf107ff8f46f89eadc560c4a4ee46a6"
+  },
+  "app/cli.py": {
+    "bytes": 1140,
+    "sha256": "4bf49ec274b2e98b88f803ba603f286bfc38bdd81e1dc2925345caf528c8ca63"
+  },
+  "app/config.py": {
+    "bytes": 4108,
+    "sha256": "225a4df8dcec4901fac73f46660c78520155023530238d3c899cd8d1f9c13075"
+  },
+  "app/conversation.py": {
+    "bytes": 16714,
+    "sha256": "4e42e1b6170cfd1185d595eb13c1b406ea14bb396440cddf33b13e513c8aa3bd"
+  },
+  "app/csv_store.py": {
+    "bytes": 5455,
+    "sha256": "fbcd178994dedb1383a9925e456d65a9f59a110183d2c4d8d4b7b710e5c6c642"
+  },
+  "app/intents.py": {
+    "bytes": 9900,
+    "sha256": "268f17547662607432bec15604e8017ca265b2b1d1a9a4786e38d37948391e1f"
+  },
+  "app/language.py": {
+    "bytes": 16967,
+    "sha256": "03bca7d03e6b63b2290c5ba40e326bf359d8c0f2ba527c1f81d06d4392d9f187"
+  },
+  "app/live_stt.py": {
+    "bytes": 7807,
+    "sha256": "1056123fed42b9754b9215fdb792aa8a34510a1953598e6dabeeec1360e77ee9"
+  },
+  "app/llm.py": {
+    "bytes": 11731,
+    "sha256": "7cd50bb328aebf33bc1c48dcd74a67e7b8e70e50702ad4ed18101e71793c77c0"
+  },
+  "app/main.py": {
+    "bytes": 9039,
+    "sha256": "6c04299d7b417f259c59fe054a54d9a13b680e5e8b4c533705ec58f4a27e0050"
+  },
+  "app/phone.py": {
+    "bytes": 723,
+    "sha256": "d0959eca92b25ddc6aa310bd8dec4ac04124376b69d48e874469ac44f5d97046"
+  },
+  "app/rtp_audio.py": {
+    "bytes": 10120,
+    "sha256": "d73f9872a72b97c057b5fef5c8b447822d8abcb176a99a48a5bdb695781ee9df"
+  },
+  "app/stt.py": {
+    "bytes": 6861,
+    "sha256": "d25d96aa0a2c3c10f58139cc26af26ba0a114fce01b9e5294705596ccda0360e"
+  },
+  "app/tts.py": {
+    "bytes": 8187,
+    "sha256": "c410219bb995d2d305900c7aea8e31e6f769299786e8b6a5fd5f0ff6a10993d3"
+  },
+  "app/verify.py": {
+    "bytes": 1582,
+    "sha256": "5c6ce432b9fe0cd3330b8696f53b5018c84e2c48ab06d85d6539f697d4b4e19d"
+  },
+  "asterisk/Dockerfile": {
+    "bytes": 242,
+    "sha256": "bed2e37701890c181e9cd46653457342243d006a0c8c4b518a2b84b3d653bf26"
+  },
+  "data/students.example.csv": {
+    "bytes": 360,
+    "sha256": "e1ac161db48a3816e203ed3536e0cae31a29afeb14369a9619203b4544a8c598"
+  },
+  "deploy/ca/.gitkeep": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "deploy/Dockerfile": {
+    "bytes": 963,
+    "sha256": "a5e33a9bfa17f9a6732bdd1621c90b830e2ba4dac4695b8919e5098379a27635"
+  },
+  "deploy/models.lock.json": {
+    "bytes": 5056,
+    "sha256": "8769f7fc3474c2cdea94c7145e4e891b150599e922f558553948dbabcb3fbc1a"
+  },
+  "deploy/requirements.txt": {
+    "bytes": 299,
+    "sha256": "ef0dfd579bd2a0f2720e7457c824f298d8a16674fe4daae7e6075cf6113107bf"
+  },
+  "deploy/sip-provider.example.conf": {
+    "bytes": 966,
+    "sha256": "a3929667961448eaec33aa3d481c13af10735037433c11ab77088580bac09822"
+  },
+  "HANDOVER_VALIDATION.md": {
+    "bytes": 4789,
+    "sha256": "a6fcb9ed56745dc420a008cd459b3b09b4a54555de99d7edab12ab398edc1cbe"
+  },
+  "PORTABLE_README.md": {
+    "bytes": 2396,
+    "sha256": "448c74213a18db15225fba9166c67985c2f8fe262d19bdefd13f66874b5d30d6"
+  },
+  "scripts/inference_provider.py": {
+    "bytes": 1797,
+    "sha256": "e09259f95e3fba2c1c8f0b8c4e014f89b58a7d7e6110d27b0937496377849cfe"
+  },
+  "scripts/meta_onnx.py": {
+    "bytes": 6455,
+    "sha256": "1cdf13cfd3873429a7df9d8fe6862918d89654b8b01d8995a835598e4ab47c64"
+  },
+  "scripts/meta_stt_service.py": {
+    "bytes": 5870,
+    "sha256": "928c6f07a170b19d9526bcba868c632cf08df699218bfc50b84a1187bcc6e357"
+  },
+  "scripts/package_portable.py": {
+    "bytes": 3440,
+    "sha256": "10de921ffeb5e8b4d45775d80bacf4939d36e107cfb39ecc04209fe8754e8ccc"
+  },
+  "scripts/portable_setup.py": {
+    "bytes": 25158,
+    "sha256": "db8ef0cd054c06c22fdb48e2de36c4eb2c40104efcd067b5160596d1a575491f"
+  },
+  "scripts/prepare_deployment_voices.py": {
+    "bytes": 2650,
+    "sha256": "6b16e65bc94e4c248f310baec73ea9e388baa75d61015cd503755ca7686348f7"
+  },
+  "scripts/speech_edges.py": {
+    "bytes": 1476,
+    "sha256": "310c9fa2246244df1d0a0904ac663fe97e372bfa31ad91a5e0180af097a3b325"
+  },
+  "scripts/vits_decoder.py": {
+    "bytes": 1642,
+    "sha256": "147a5687f77165c06b64a71cda6148e510a3525a14555996a064cc1fd1535f28"
+  },
+  "scripts/vits_dynamic.py": {
+    "bytes": 2290,
+    "sha256": "aabf37d734151e45b7c5e8de7443319045dc7c2e642692cba352f48fc55340c8"
+  },
+  "scripts/vits_service.py": {
+    "bytes": 7529,
+    "sha256": "c0059f6f280845f89bc4a2b56e199f4ef1addd80cb62070f758aa3cdc9acddf4"
+  },
+  "setup.ps1": {
+    "bytes": 7181,
+    "sha256": "09f221235961fa21d3b18d893d75c1b69408482fa25944c613e37326a65f41bc"
+  },
+  "setup.sh": {
+    "bytes": 2122,
+    "sha256": "86e8582c6b843a8d41f98e884955c945d3c27f26758c4fc36fe9d25650a972aa"
+  },
+  "SETUP_GUIDE.md": {
+    "bytes": 21693,
+    "sha256": "816c04c4088e922b140b20b79bc23165f0dd9067ec2073ac94f9be4d53ba73cb"
+  },
+  "tests/__init__.py": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "tests/fixtures/students.csv": {
+    "bytes": 342,
+    "sha256": "38bf19dce6a7caf2256d512bd26940bc432b4e492e6e78284ad7ea517b67afce"
+  },
+  "tests/support.py": {
+    "bytes": 1350,
+    "sha256": "fa3d8cd0a2606403ff6ae0d6696e853758079cb053da4ff422cdc5839944e5e4"
+  },
+  "tests/test_api_auth.py": {
+    "bytes": 3531,
+    "sha256": "7ff75da6ec2861a528a6dcb4f482dd236b0d0b2ef6fb320a13f358f7a2f7e0ba"
+  },
+  "tests/test_ari.py": {
+    "bytes": 10177,
+    "sha256": "d51fb754a3dd5277036f363a3b9e0117a1008f6e63d08eed9d08a99f7c4a6cf4"
+  },
+  "tests/test_audio_cache.py": {
+    "bytes": 4999,
+    "sha256": "d735fbb5629bb4e5494482cdac658a7bf6e8d6a484e065fb6b44447a3bf6db33"
+  },
+  "tests/test_campaign.py": {
+    "bytes": 5884,
+    "sha256": "e8265e23c7f211192775fd032f1a94c25b1911d8103d37d0fe8fb9a9b377e55d"
+  },
+  "tests/test_conversation.py": {
+    "bytes": 21028,
+    "sha256": "12775ffb92f0e07a1f0c44bde4c02d2475720eafe58c585b67784d652d6679e0"
+  },
+  "tests/test_csv_verify.py": {
+    "bytes": 1938,
+    "sha256": "e7760f80a9a4e16a5cb221e147fb6c40dc411fa02744c6b47b7aae10c059f933"
+  },
+  "tests/test_live_stt.py": {
+    "bytes": 8882,
+    "sha256": "d215fc7a67931d3cf5aec926fae15a7d6acfc70e8dcfcc4b4451abb0b42264b5"
+  },
+  "tests/test_meta_stt.py": {
+    "bytes": 3444,
+    "sha256": "2ca31ef948a7fd309f9399b255c2c04128d2335cfc7441a1c94abe0772840147"
+  },
+  "tests/test_optimized_speech.py": {
+    "bytes": 6289,
+    "sha256": "7a010f90acf335a4539d06bea10e6976e8307498b8fc5329694fc7665acad8b3"
+  },
+  "tests/test_portable_setup.py": {
+    "bytes": 4890,
+    "sha256": "e93ed60bfcfd03238e0c847e2568dbda066f9d40cd682596e4796504b11b1183"
+  },
+  "tests/test_streaming_audio.py": {
+    "bytes": 4398,
+    "sha256": "20fedf86816647eaf54514e004233f92654a4cb5fe18f06642d12c22fa089694"
+  },
+  "tests/test_stt.py": {
+    "bytes": 1543,
+    "sha256": "ceeca37ebafae5eb099e5d5f3f58edaca777e89a1f060b68584b33b9b691fd43"
+  },
+  "tests/test_vits_dynamic.py": {
+    "bytes": 1884,
+    "sha256": "1bb715d338b0284bee1990af65f403cdc83e69b585807ed1263222a3f5961ba9"
+  },
+  "tests/test_vits_normalize.py": {
+    "bytes": 1161,
+    "sha256": "f66eee0260e92a224ef79df26ea283edd1893dc3e408bf69a38b9aa9d7bfa8e4"
+  }
+}

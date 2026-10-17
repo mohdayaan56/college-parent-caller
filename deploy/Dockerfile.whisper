@@ -1,0 +1,3 @@
+FROM college-parent-speech:gpu
+RUN pip install --no-cache-dir ctranslate2==4.6.0 av==16.1.0 tokenizers==0.22.1 huggingface-hub==0.36.0 tqdm==4.67.1 && \
+    pip install --no-cache-dir --no-deps faster-whisper==1.2.1

@@ -1,0 +1,126 @@
+{
+  "format": 1,
+  "ollama_model": "gemma4-e2b-college:qat4",
+  "assets": [
+    {
+      "repo": "EmreAkgul/omniASR-CTC-300M-v2-ONNX",
+      "revision": "79600f7a2b0678b8eccaf257f367ae21e436ba82",
+      "file": "model.onnx",
+      "path": "models/meta-onnx/model.onnx",
+      "bytes": 1304472305,
+      "sha256": "48b8f1ee5d5a3760b41f98641ebc582e8a85faf85e53b46fc89619f61a4239bd"
+    },
+    {
+      "repo": "EmreAkgul/omniASR-CTC-300M-v2-ONNX",
+      "revision": "79600f7a2b0678b8eccaf257f367ae21e436ba82",
+      "file": "tokenizer.model",
+      "path": "models/meta-onnx/tokenizer.model",
+      "bytes": 91481,
+      "sha256": "8aa11a1092142ef472537476ef6e76541123e2f0d789b79f3ebd119008240b1e"
+    },
+    {
+      "repo": "EmreAkgul/omniASR-CTC-300M-v2-ONNX",
+      "revision": "79600f7a2b0678b8eccaf257f367ae21e436ba82",
+      "file": "config.json",
+      "path": "models/meta-onnx/config.json",
+      "bytes": 989,
+      "sha256": "5a7f1b150ee3892d02bcefb2980cd1ca8c1612dcbb5a9561d2b6388159f94f1d"
+    },
+    {
+      "repo": "EmreAkgul/omniASR-CTC-300M-v2-ONNX",
+      "revision": "79600f7a2b0678b8eccaf257f367ae21e436ba82",
+      "file": "LICENSE",
+      "path": "models/meta-onnx/LICENSE",
+      "bytes": 10936,
+      "sha256": "3b22401ab022946d92dd29559bf219b04b5505aab6efeaf806a5d7e144341e59"
+    },
+    {
+      "repo": "EmreAkgul/omniASR-CTC-300M-v2-ONNX",
+      "revision": "79600f7a2b0678b8eccaf257f367ae21e436ba82",
+      "file": "README.md",
+      "path": "models/meta-onnx/README.md",
+      "bytes": 2890,
+      "sha256": "0cfe7df70b538346b4c9d6d1512b26c13156c82d2842f7581adfd85328f6087c"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "en_female/extra.py",
+      "path": "models/voiceapi-vits/en_female/extra.py",
+      "bytes": 26363,
+      "sha256": "3ac9a2fd0cadc470fa1b3af0f89744f2e2aa02e35589752e3a6870abe090570c"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "en_female/chars.txt",
+      "path": "models/voiceapi-vits/en_female/chars.txt",
+      "bytes": 34,
+      "sha256": "c7b3e19e3801bcbff9a7d2844096d57d38df38db30c25c1054e46ee9e76904f9"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "en_female/en_female_vits_30hrs.pt",
+      "path": "models/voiceapi-vits/en_female/en_female_vits_30hrs.pt",
+      "bytes": 333229574,
+      "sha256": "9dfa80f08da6ca7222a16cb6d919251fb733d3f03042848a20201fa6ae0d0b9c"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "hi_female/extra.py",
+      "path": "models/voiceapi-vits/hi_female/extra.py",
+      "bytes": 26363,
+      "sha256": "3ac9a2fd0cadc470fa1b3af0f89744f2e2aa02e35589752e3a6870abe090570c"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "hi_female/chars.txt",
+      "path": "models/voiceapi-vits/hi_female/chars.txt",
+      "bytes": 225,
+      "sha256": "fc4f2c4f42095971e8c9a615149201ddfcb3e4383786ab447916a0844f7ccf3d"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "hi_female/hi_female_vits_30hrs.pt",
+      "path": "models/voiceapi-vits/hi_female/hi_female_vits_30hrs.pt",
+      "bytes": 333261446,
+      "sha256": "2bcfb47f599b36e7cbfec27142604c366e538c17e89980a40519291f92a46327"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "kn_female/extra.py",
+      "path": "models/voiceapi-vits/kn_female/extra.py",
+      "bytes": 26363,
+      "sha256": "3ac9a2fd0cadc470fa1b3af0f89744f2e2aa02e35589752e3a6870abe090570c"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "kn_female/chars.txt",
+      "path": "models/voiceapi-vits/kn_female/chars.txt",
+      "bytes": 188,
+      "sha256": "0941599aa91df447963b33ce48e2111fff1d6cedaad62ca6a4c57d9898803f66"
+    },
+    {
+      "repo": "Harshil748/VoiceAPI-Models",
+      "revision": "487d8fc80267915d2965f50cb6c9b7a984f1ef0f",
+      "file": "kn_female/kn_female_vits_30hrs.pt",
+      "path": "models/voiceapi-vits/kn_female/kn_female_vits_30hrs.pt",
+      "bytes": 333252998,
+      "sha256": "49be422a46afc7714a8ea1cab589d986c3bc61939faa5f1d5d6f9f80a263c51c"
+    },
+    {
+      "repo": "unsloth/gemma-4-E2B-it-qat-GGUF",
+      "revision": "66a399f68ddd113b06dff02fca9523e55465d11d",
+      "file": "gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf",
+      "path": "models/gemma-4-E2B-text-qat/gemma-4-E2B-it-qat-UD-Q4_K_XL.gguf",
+      "bytes": 2620370976,
+      "sha256": "e531007218dfab990486a5de7676a6932d6ea8dea233d1f698d7c21cf8a16889"
+    }
+  ]
+}

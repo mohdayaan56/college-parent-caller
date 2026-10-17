@@ -1,0 +1,264 @@
+--- a/addons/chan_mobile.c
++++ b/addons/chan_mobile.c
+@@ -44,6 +44,9 @@
+ 
+ #include <pthread.h>
+ #include <signal.h>
++#include <sys/socket.h>
++#include <sys/un.h>
++#include <sys/stat.h>
+ 
+ #include <bluetooth/bluetooth.h>
+ #include <bluetooth/hci.h>
+@@ -106,6 +109,9 @@
+ 	struct io_context *io;				/*!< io context for audio connections */
+ 	struct io_context *accept_io;			/*!< io context for sco listener */
+ 	int *sco_id;					/*!< the io context id of the sco listener socket */
++	int phone_rfcomm_socket;
++	int *phone_rfcomm_id;
++	char phone_bridge_path[108];
+ 	int sco_socket;					/*!< sco listener socket */
+ 	pthread_t sco_listener_thread;			/*!< sco listener thread */
+ 	AST_LIST_ENTRY(adapter_pvt) entry;
+@@ -244,6 +250,7 @@
+ static int sco_write(int s, char *buf, int len);
+ static int sco_accept(int *id, int fd, short events, void *data);
+ static int sco_bind(struct adapter_pvt *adapter);
++static int start_monitor(struct mbl_pvt *pvt);
+ 
+ static void *do_sco_listen(void *data);
+ static int sdp_search(char *addr, int profile);
+@@ -1955,6 +1962,117 @@
+  * \param adapter an adapter_pvt
+  * \return -1 on error, non zero on success
+  */
++
++/* BlueZ owns the HFP profile and passes its authorized RFCOMM descriptor.
++ * A root-only Unix socket bridges it into the existing Asterisk HFP monitor.
++ */
++static int phone_rfcomm_accept(int *id, int fd, short events, void *data)
++{
++    struct adapter_pvt *adapter = data;
++    struct sockaddr_rc addr, local;
++    socklen_t len;
++    struct mbl_pvt *pvt;
++    struct ucred cred;
++    struct timeval timeout = { .tv_sec = 1 };
++    char byte = 0, answer = 0;
++    char control[CMSG_SPACE(sizeof(int) * 8)];
++    struct iovec iov = { .iov_base = &byte, .iov_len = 1 };
++    struct msghdr msg = { .msg_iov = &iov, .msg_iovlen = 1,
++        .msg_control = control, .msg_controllen = sizeof(control) };
++    struct cmsghdr *cmsg;
++    int sock = -1, count = 0, bridge = accept(fd, NULL, NULL);
++    if (bridge < 0) {
++        return 1;
++    }
++    len = sizeof(cred);
++    if (getsockopt(bridge, SOL_SOCKET, SO_PEERCRED, &cred, &len) < 0 || cred.uid != 0)
++        goto done;
++    setsockopt(bridge, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
++    if (recvmsg(bridge, &msg, MSG_CMSG_CLOEXEC) != 1)
++        goto done;
++    for (cmsg = CMSG_FIRSTHDR(&msg); cmsg; cmsg = CMSG_NXTHDR(&msg, cmsg)) {
++        if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS
++            && cmsg->cmsg_len >= CMSG_LEN(sizeof(int))) {
++            size_t n = (cmsg->cmsg_len - CMSG_LEN(0)) / sizeof(int), i;
++            int *fds = (int *)CMSG_DATA(cmsg);
++            for (i = 0; i < n; ++i) {
++                if (++count == 1) sock = fds[i]; else close(fds[i]);
++            }
++        }
++    }
++    if (count != 1 || byte != 'H' || (msg.msg_flags & (MSG_CTRUNC | MSG_TRUNC)))
++        goto done;
++    memset(&addr, 0, sizeof(addr));
++    memset(&local, 0, sizeof(local));
++    len = sizeof(addr);
++    if (getpeername(sock, (struct sockaddr *)&addr, &len) < 0
++        || addr.rc_family != AF_BLUETOOTH || len != sizeof(addr)) goto done;
++    len = sizeof(local);
++    if (getsockname(sock, (struct sockaddr *)&local, &len) < 0
++        || local.rc_family != AF_BLUETOOTH || len != sizeof(local)
++        || bacmp(&local.rc_bdaddr, &adapter->addr)) goto done;
++    AST_RWLIST_RDLOCK(&devices);
++    AST_RWLIST_TRAVERSE(&devices, pvt, entry) {
++        if (pvt->adapter == adapter && pvt->type == MBL_TYPE_PHONE
++            && !bacmp(&pvt->addr, &addr.rc_bdaddr)) {
++            break;
++        }
++    }
++    if (!pvt) {
++        AST_RWLIST_UNLOCK(&devices);
++        goto done;
++    }
++    ast_mutex_lock(&pvt->lock);
++    if (adapter->inuse || pvt->connected || pvt->owner) {
++        /* Keep the existing connection; reject the duplicate. */
++    } else {
++        pvt->rfcomm_socket = sock;
++        if (start_monitor(pvt)) {
++            pvt->connected = 1;
++            adapter->inuse = 1;
++            answer = 1;
++            sock = -1; /* monitor owns the received descriptor */
++            ast_verb(3, "BlueZ HFP connection for %s\n", pvt->id);
++        } else {
++            pvt->rfcomm_socket = -1;
++        }
++    }
++    ast_mutex_unlock(&pvt->lock);
++    AST_RWLIST_UNLOCK(&devices);
++done:
++    if (sock >= 0) close(sock);
++    send(bridge, &answer, 1, MSG_NOSIGNAL);
++    close(bridge);
++    return 1;
++}
++
++static int phone_rfcomm_bind(struct adapter_pvt *adapter)
++{
++    struct sockaddr_un addr;
++    mode_t previous_mask;
++    int sock = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
++    if (sock < 0) {
++        return -1;
++    }
++    memset(&addr, 0, sizeof(addr));
++    addr.sun_family = AF_UNIX;
++    if (snprintf(adapter->phone_bridge_path, sizeof(adapter->phone_bridge_path),
++        "/var/run/asterisk/phone-hfp-%s.sock", adapter->id)
++        >= sizeof(adapter->phone_bridge_path)) { close(sock); return -1; }
++    ast_copy_string(addr.sun_path, adapter->phone_bridge_path, sizeof(addr.sun_path));
++    unlink(addr.sun_path);
++    previous_mask = umask(0077);
++    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
++        umask(previous_mask);
++        close(sock);
++        return -1;
++    }
++    umask(previous_mask);
++    if (listen(sock, 1) < 0) { close(sock); unlink(addr.sun_path); return -1; }
++    adapter->phone_rfcomm_socket = sock;
++    return sock;
++}
++
+ static int sco_bind(struct adapter_pvt *adapter)
+ {
+ 	struct sockaddr_sco addr;
+@@ -3120,9 +3238,8 @@
+ 
+ static sdp_session_t *sdp_register(void)
+ {
+-	uint32_t service_uuid_int[] = {0, 0, 0, GENERIC_AUDIO_SVCLASS_ID};
+ 	uint8_t rfcomm_channel = 1;
+-	const char *service_name = "Asterisk PABX";
++	const char *service_name = "College Caller Handsfree";
+ 	const char *service_dsc = "Asterisk PABX";
+ 	const char *service_prov = "Asterisk";
+ 
+@@ -3134,15 +3251,27 @@
+ 
+ 	sdp_record_t *record = sdp_record_alloc();
+ 
+-	sdp_uuid128_create(&svc_uuid, &service_uuid_int);
++	sdp_uuid16_create(&svc_uuid, HANDSFREE_SVCLASS_ID);
+ 	sdp_set_service_id(record, svc_uuid);
+ 
+-	sdp_uuid32_create(&svc_class1_uuid, GENERIC_AUDIO_SVCLASS_ID);
+-	sdp_uuid32_create(&svc_class2_uuid, HEADSET_PROFILE_ID);
++	sdp_uuid16_create(&svc_class1_uuid, GENERIC_AUDIO_SVCLASS_ID);
++	sdp_uuid16_create(&svc_class2_uuid, HANDSFREE_SVCLASS_ID);
+ 
+ 	svc_uuid_list = sdp_list_append(0, &svc_class1_uuid);
+ 	svc_uuid_list = sdp_list_append(svc_uuid_list, &svc_class2_uuid);
+-	sdp_set_service_classes(record, svc_uuid_list);
++
++    sdp_set_service_classes(record, svc_uuid_list);
++    {
++        sdp_profile_desc_t profile;
++        sdp_list_t *profiles;
++        sdp_uuid16_create(&profile.uuid, HANDSFREE_PROFILE_ID);
++        profile.version = 0x0105;
++        profiles = sdp_list_append(NULL, &profile);
++        sdp_set_profile_descs(record, profiles);
++        sdp_list_free(profiles, NULL);
++        sdp_attr_add_new(record, SDP_ATTR_SUPPORTED_FEATURES, SDP_UINT16,
++            &(uint16_t){0x0004});
++    }
+ 
+ 	sdp_uuid16_create(&root_uuid, PUBLIC_BROWSE_GROUP);
+ 	root_list = sdp_list_append(0, &root_uuid);
+@@ -4083,7 +4212,9 @@
+ 		mbl_queue_hangup(pvt);
+ 	}
+ 
++	shutdown(pvt->rfcomm_socket, SHUT_RDWR);
+ 	close(pvt->rfcomm_socket);
++	pvt->rfcomm_socket = -1;
+ 	close(pvt->sco_socket);
+ 	pvt->sco_socket = -1;
+ 
+@@ -4294,7 +4425,7 @@
+ 				AST_RWLIST_RDLOCK(&devices);
+ 				AST_RWLIST_TRAVERSE(&devices, pvt, entry) {
+ 					ast_mutex_lock(&pvt->lock);
+-					if (!adapter->inuse && !pvt->connected && !strcmp(adapter->id, pvt->adapter->id)) {
++					if (pvt->type != MBL_TYPE_PHONE && !adapter->inuse && !pvt->connected && !strcmp(adapter->id, pvt->adapter->id)) {
+ 						if ((pvt->rfcomm_socket = rfcomm_connect(adapter->addr, pvt->addr, pvt->rfcomm_port)) > -1) {
+ 							if (start_monitor(pvt)) {
+ 								pvt->connected = 1;
+@@ -4386,6 +4517,7 @@
+ 		goto e_return;
+ 	}
+ 
++	adapter->phone_rfcomm_socket = -1;
+ 	ast_copy_string(adapter->id, id, sizeof(adapter->id));
+ 	str2ba(address, &adapter->addr);
+ 
+@@ -4443,9 +4575,25 @@
+ 		goto e_close_sco;
+ 	}
+ 
+-	/* start the sco listener for this adapter */
++
++    /* Accept authorized BlueZ profile connections through the local bridge. */
++    if (phone_rfcomm_bind(adapter) < 0) {
++        ast_log(LOG_ERROR, "Cannot bind HFP listener for %s\n", adapter->id);
++        goto e_remove_sco;
++    }
++    adapter->phone_rfcomm_id = ast_io_add(adapter->accept_io,
++        adapter->phone_rfcomm_socket, phone_rfcomm_accept, AST_IO_IN, adapter);
++    if (!adapter->phone_rfcomm_id) {
++        close(adapter->phone_rfcomm_socket);
++        unlink(adapter->phone_bridge_path);
++        goto e_remove_sco;
++    }
++    /* start the sco listener for this adapter */
+ 	if (ast_pthread_create_background(&adapter->sco_listener_thread, NULL, do_sco_listen, adapter)) {
+ 		ast_log(LOG_ERROR, "Skipping adapter %s. Error creating audio connection listener thread.\n", adapter->id);
++		ast_io_remove(adapter->accept_io, adapter->phone_rfcomm_id);
++		close(adapter->phone_rfcomm_socket);
++		unlink(adapter->phone_bridge_path);
+ 		goto e_remove_sco;
+ 	}
+ 
+@@ -4759,6 +4907,8 @@
+ 	/* Destroy the adapter list */
+ 	AST_RWLIST_WRLOCK(&adapters);
+ 	while ((adapter = AST_RWLIST_REMOVE_HEAD(&adapters, entry))) {
++		close(adapter->phone_rfcomm_socket);
++		unlink(adapter->phone_bridge_path);
+ 		close(adapter->sco_socket);
+ 		io_context_destroy(adapter->io);
+ 		io_context_destroy(adapter->accept_io);
+@@ -4806,7 +4956,8 @@
+ 		return AST_MODULE_LOAD_DECLINE;
+ 	}
+ 
+-	sdp_session = sdp_register();
++	/* BlueZ ProfileManager owns the HFP SDP record and RFCOMM listener. */
++	sdp_session = NULL;
+ 
+ 	/* Spin the discovery thread */
+ 	if (ast_pthread_create_background(&discovery_thread, NULL, do_discovery, NULL) < 0) {
